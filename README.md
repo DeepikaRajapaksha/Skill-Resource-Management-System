@@ -56,7 +56,7 @@ Ensure the following are installed on your system:
 
 ## 📥 **1. Clone the Repository**
 
-git clone https://github.com/yourusername/skills-resource-management-system.git
+git clone [https://github.com/yourusername/skills-resource-management-system.git](https://github.com/DeepikaRajapaksha/Skill-Resource-Management-System.git) 
 cd skills-resource-management-system
 
 ---

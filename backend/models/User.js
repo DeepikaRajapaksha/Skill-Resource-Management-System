@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "users",
-      timestamps: false // <- disable createdAt/updatedAt
+      timestamps: false 
     }
   );
 

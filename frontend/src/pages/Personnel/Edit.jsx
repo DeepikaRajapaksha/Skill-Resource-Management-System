@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getPersonnel, updatePersonnel } from "../../services/PersonnelAPI"; 
-import "./personnel.css";
+import "../../styles/personnel.css";
 
 export default function Edit() {
   const { id } = useParams(); 

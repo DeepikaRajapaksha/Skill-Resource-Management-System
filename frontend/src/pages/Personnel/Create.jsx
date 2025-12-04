@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPersonnel } from "../../services/PersonnelAPI";
-import "./personnel.css";
+import "../../styles/personnel.css";
 
 export default function Create() {
   const navigate = useNavigate();

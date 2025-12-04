@@ -11,6 +11,8 @@ app.use("/api/auth", require("./routes/auth"));
 // Routes
 const personnelRoutes = require('./routes/personnel');
 app.use('/api/personnel', personnelRoutes);
+const skillsRoutes = require('./routes/skills');
+app.use('/api/skills', skillsRoutes);
 
 app.get('/', (req, res) => res.send('Backend Running'));
 

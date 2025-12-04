@@ -1,0 +1,94 @@
+.skill-container {
+  width: 90%;
+  max-width: 900px;
+  margin: auto;
+  margin-top: 40px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(150, 150, 150, 0.15);
+}
+
+.skill-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.skill-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.skill-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.skill-table th,
+.skill-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.skill-actions button {
+  margin-right: 10px;
+}
+
+.btn-primary {
+  background: #4b79ff;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background: #27ae60;
+  padding: 6px 12px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-delete {
+  background: #e74c3c;
+  padding: 6px 12px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-submit {
+  margin-top: 15px;
+  width: 100%;
+  background: #4b79ff;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.error-msg {
+  color: red;
+  margin-bottom: 10px;
+}

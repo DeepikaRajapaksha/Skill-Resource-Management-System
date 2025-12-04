@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: { isEmail: true },
-        unique: true
+        unique: true,
+        validate: { isEmail: true }
       },
       role: {
         type: DataTypes.STRING
@@ -23,9 +23,19 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: 'personnel',
-      underscored: true
+      underscored: true,
+      timestamps: true
     }
   );
+
+  Personnel.associate = (models) => {
+    Personnel.belongsToMany(models.Skill, {
+      through: models.PersonnelSkill,
+      foreignKey: 'personnel_id',
+      otherKey: 'skill_id',
+      as: 'skills'
+    });
+  };
 
   return Personnel;
 };

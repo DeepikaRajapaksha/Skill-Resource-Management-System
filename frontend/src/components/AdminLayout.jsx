@@ -96,6 +96,19 @@ export default function AdminLayout() {
           >
             👥 {sidebarOpen && "Skills"}
           </Link>
+          <Link
+            to="/personnel-skills"
+            style={{
+              padding: "12px",
+              color: "#fff",
+              textDecoration: "none",
+              fontSize: "1rem",
+              transition: "0.3s",
+              textAlign: sidebarOpen ? "left" : "center",
+            }}
+          >
+            📁 {sidebarOpen && "Personnem Assignment"}
+          </Link>
 
           <Link
             to="/projects"

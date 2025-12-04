@@ -13,7 +13,8 @@ const personnelRoutes = require('./routes/personnel');
 app.use('/api/personnel', personnelRoutes);
 const skillsRoutes = require('./routes/skills');
 app.use('/api/skills', skillsRoutes);
-
+const personnelSkillsRoutes = require('./routes/personnelSkills');
+app.use('/api/personnel-skills', personnelSkillsRoutes);
 app.get('/', (req, res) => res.send('Backend Running'));
 
 app.listen(5000, () => console.log("Backend running on port 5000"));

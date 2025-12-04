@@ -1,18 +1,31 @@
+'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Skill = sequelize.define(
-    "Skill",
+    'Skill',
     {
-      name: DataTypes.STRING,
-      category: DataTypes.STRING,
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      category: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       description: DataTypes.TEXT
     },
-    { tableName: "skills", timestamps: false }
+    {
+      tableName: 'skills',
+      underscored: true,
+      timestamps: true 
+    }
   );
 
   Skill.associate = (models) => {
     Skill.belongsToMany(models.Personnel, {
       through: models.PersonnelSkill,
-      foreignKey: "skill_id",
+      foreignKey: 'skill_id',
+      otherKey: 'personnel_id',
+      as: 'personnels'
     });
   };
 

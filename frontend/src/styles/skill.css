@@ -86,7 +86,14 @@
   border: 1px solid #ddd;
   border-radius: 6px;
   background: #fafafa;
+  color: #000;            
 }
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #555;           
+}
+
 
 .error-msg {
   color: red;

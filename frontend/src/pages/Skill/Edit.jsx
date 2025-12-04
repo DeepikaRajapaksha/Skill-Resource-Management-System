@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSkill, updateSkill } from "../../services/SkillAPI";
-import "../../styles/personnel.css";  // ← Use SAME UI as personnel
+import "../../styles/personnel.css";  
 
 export default function Edit() {
   const { id } = useParams();

@@ -107,7 +107,7 @@ export default function AdminLayout() {
               textAlign: sidebarOpen ? "left" : "center",
             }}
           >
-            📁 {sidebarOpen && "Personnem Assignment"}
+            📁 {sidebarOpen && "Personnel Assignment"}
           </Link>
 
           <Link
@@ -122,6 +122,20 @@ export default function AdminLayout() {
             }}
           >
             📁 {sidebarOpen && "Projects"}
+          </Link>
+
+          <Link
+            to="/project-skill"
+            style={{
+              padding: "12px",
+              color: "#fff",
+              textDecoration: "none",
+              fontSize: "1rem",
+              transition: "0.3s",
+              textAlign: sidebarOpen ? "left" : "center",
+            }}
+          >
+            📁 {sidebarOpen && "Projects Skills"}
           </Link>
         </nav>
 

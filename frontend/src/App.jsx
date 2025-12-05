@@ -17,6 +17,9 @@ import PersonnelSkillsEdit from "./pages/PersonnelSkills/Edit";
 import ProjectList from "./pages/Project/List";
 import ProjectCreate from "./pages/Project/Create";
 import ProjectEdit from "./pages/Project/Edit";
+import ProjectSkillList from "./pages/ProjectSkill/List";
+import ProjectSkillCreate from "./pages/ProjectSkill/Create";
+import ProjectSkillEdit from "./pages/ProjectSkill/Edit";
 
 export default function App() {
   return (
@@ -39,6 +42,9 @@ export default function App() {
           <Route path="/projects" element={<ProjectList />} />
           <Route path="/projects/create" element={<ProjectCreate/>} />
           <Route path="/projects/edit/:id" element={<ProjectEdit />} />
+          <Route path="/project-skill" element={<ProjectSkillList />} />
+          <Route path="/project-skill/create" element={<ProjectSkillCreate/>} />
+          <Route path="/project-skill/edit/:id" element={<ProjectSkillEdit />} />
         </Route>
 
       </Routes>

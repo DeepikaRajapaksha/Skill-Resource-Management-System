@@ -19,6 +19,8 @@ const projectRoutes = require('./routes/project');
 app.use('/api/projects', projectRoutes);
 const projectSkillRoutes = require('./routes/projectSkill');
 app.use('/api/project-skills', projectSkillRoutes);
+const projectAssignmentRoutes = require("./routes/projectAssignment");
+app.use("/api/project-assignments", projectAssignmentRoutes);
 
 app.get('/', (req, res) => res.send('Backend Running'));
 

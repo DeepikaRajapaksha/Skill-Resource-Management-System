@@ -137,6 +137,20 @@ export default function AdminLayout() {
           >
             📁 {sidebarOpen && "Projects Skills"}
           </Link>
+
+          <Link
+            to="/project-assignment"
+            style={{
+              padding: "12px",
+              color: "#fff",
+              textDecoration: "none",
+              fontSize: "1rem",
+              transition: "0.3s",
+              textAlign: sidebarOpen ? "left" : "center",
+            }}
+          >
+            📁 {sidebarOpen && "Projects Assign"}
+          </Link>
         </nav>
 
         {/* Logout */}

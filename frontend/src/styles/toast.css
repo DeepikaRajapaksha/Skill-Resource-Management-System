@@ -1,0 +1,24 @@
+/* src/styles/toast.css */
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 250px;
+  padding: 12px 20px;
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 9999;
+  opacity: 0.95;
+  font-weight: 500;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+.toast-success {
+  background-color: #4caf50;
+}
+
+.toast-error {
+  background-color: #ff4d4f;
+}

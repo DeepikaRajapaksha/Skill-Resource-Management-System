@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getPersonnel, updatePersonnel } from "../../services/PersonnelAPI"; 
+import Toast from "../../components/Toast";
 import "../../styles/personnel.css";
 
 export default function Edit() {
@@ -12,9 +13,9 @@ export default function Edit() {
     role: "",
     level: "",
   });
-  const [error, setError] = useState("");
+  const [toast, setToast] = useState(null);
 
-  // Fetch personnel by ID when component mounts
+  // Fetch personnel by ID
   useEffect(() => {
     const fetchPersonnel = async () => {
       try {
@@ -27,8 +28,8 @@ export default function Edit() {
         });
       } catch (err) {
         console.error(err);
-        alert("Failed to fetch personnel data.");
-        navigate("/personnel"); 
+        setToast({ message: "Failed to fetch personnel data.", type: "error" });
+        setTimeout(() => navigate("/personnel"), 2000);
       }
     };
     fetchPersonnel();
@@ -39,34 +40,42 @@ export default function Edit() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    setError("");
 
     // Validation
     if (!form.name || !form.email || !form.level) {
-      setError("Name, Email, and Experience Level are required.");
+      setToast({ message: "Name, Email, and Experience Level are required!", type: "error" });
       return;
     }
+
     if (!/\S+@\S+\.\S+/.test(form.email)) {
-      setError("Invalid email format.");
+      setToast({ message: "Invalid email format!", type: "error" });
       return;
     }
 
     try {
-      await updatePersonnel(id, form); 
-      navigate("/personnel"); 
+      await updatePersonnel(id, form);
+      setToast({ message: "Developer updated successfully!", type: "success" });
+
+      setTimeout(() => navigate("/personnel"), 1000);
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || "Server error. Please try again.");
+      setToast({ message: err.response?.data?.message || "Server error!", type: "error" });
     }
   };
 
   return (
     <div className="personnel-container">
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       <h2 className="personnel-title">Edit Personnel</h2>
 
-      {error && <p className="error-msg">{error}</p>}
-
-      <form onSubmit={handleUpdate}>
+      <form onSubmit={handleUpdate} className="personnel-form">
         <div className="form-group">
           <label>Name *</label>
           <input

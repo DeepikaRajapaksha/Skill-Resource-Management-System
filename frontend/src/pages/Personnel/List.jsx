@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllPersonnel, deletePersonnel } from "../../services/PersonnelAPI";
+import Toast from "../../components/Toast"; // Import the toast component
 import "../../styles/personnel.css";
 
 export default function List() {
   const [personnel, setPersonnel] = useState([]);
+  const [toast, setToast] = useState(null); // Toast state
   const navigate = useNavigate();
 
   // Fetch personnel from backend
@@ -14,7 +16,7 @@ export default function List() {
       setPersonnel(res.data);
     } catch (err) {
       console.error("Failed to fetch personnel:", err);
-      alert("Failed to fetch personnel data. Please try again.");
+      setToast({ message: "Failed to fetch personnel data.", type: "error" });
     }
   };
 
@@ -27,16 +29,26 @@ export default function List() {
     if (window.confirm("Are you sure you want to delete this personnel?")) {
       try {
         await deletePersonnel(id);
+        setToast({ message: "Personnel deleted successfully!", type: "success" });
         fetchPersonnel(); 
       } catch (err) {
         console.error("Failed to delete personnel:", err);
-        alert("Failed to delete personnel. Please try again.");
+        setToast({ message: "Failed to delete personnel.", type: "error" });
       }
     }
   };
 
   return (
     <div className="personnel-container">
+      {/* Toast notifications */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       {/* Header */}
       <div className="personnel-header">
         <h2 className="personnel-title">Personnel Management</h2>
@@ -69,9 +81,7 @@ export default function List() {
                   <td>{p.email}</td>
                   <td>{p.role}</td>
                   <td>{p.level}</td>
-                  <td>
-                    {new Date(p.created_at || p.createdAt).toLocaleDateString()}
-                  </td>
+                  <td>{new Date(p.created_at || p.createdAt).toLocaleDateString()}</td>
                   <td className="personnel-actions">
                     <button
                       className="btn-edit"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProject, updateProject } from "../../services/ProjectAPI";
+import Toast from "../../components/Toast";
 import "../../styles/personnel.css";
 
 export default function EditProject() {
@@ -15,9 +16,9 @@ export default function EditProject() {
     status: "",
   });
 
-  const [error, setError] = useState("");
+  const [toast, setToast] = useState(null);
 
-  // Fetch project
+  // Fetch project by ID
   useEffect(() => {
     const fetchProject = async () => {
       try {
@@ -32,10 +33,11 @@ export default function EditProject() {
         });
       } catch (err) {
         console.error(err);
-        alert("Failed to fetch project data.");
-        navigate("/projects");
+        setToast({ message: "Failed to fetch project data.", type: "error" });
+        setTimeout(() => navigate("/projects"), 2000);
       }
     };
+
     fetchProject();
   }, [id, navigate]);
 
@@ -44,27 +46,35 @@ export default function EditProject() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    setError("");
 
+    // Validation
     if (!form.name || !form.start_date || !form.end_date || !form.status) {
-      setError("Project Name, Dates, and Status are required.");
+      setToast({ message: "Project Name, Dates, and Status are required!", type: "error" });
       return;
     }
 
     try {
       await updateProject(id, form);
-      navigate("/projects");
+      setToast({ message: "Project updated successfully!", type: "success" });
+
+      setTimeout(() => navigate("/projects"), 1000);
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || "Server error. Please try again.");
+      setToast({ message: err.response?.data?.message || "Server error. Please try again.", type: "error" });
     }
   };
 
   return (
     <div className="personnel-container">
-      <h2 className="personnel-title">Edit Project</h2>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
 
-      {error && <p className="error-msg">{error}</p>}
+      <h2 className="personnel-title">Edit Project</h2>
 
       <form onSubmit={handleUpdate} className="personnel-form">
         <div className="form-group">
@@ -134,3 +144,4 @@ export default function EditProject() {
     </div>
   );
 }
+

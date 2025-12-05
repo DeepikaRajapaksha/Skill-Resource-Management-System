@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllPersonnel, deletePersonnel } from "../../services/PersonnelAPI";
-import Toast from "../../components/Toast"; // Import the toast component
+import Toast from "../../components/Toast"; 
 import "../../styles/personnel.css";
 
 export default function List() {
   const [personnel, setPersonnel] = useState([]);
-  const [toast, setToast] = useState(null); // Toast state
+  const [toast, setToast] = useState(null); 
   const navigate = useNavigate();
 
   // Fetch personnel from backend

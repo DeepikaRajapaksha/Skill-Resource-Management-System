@@ -6,12 +6,14 @@ export default function Toast({ message, type = "success", onClose }) {
     const timer = setTimeout(() => {
       onClose();
     }, 3000); 
+
     return () => clearTimeout(timer);
   }, [onClose]);
 
   return (
-    <div className={`toast toast-${type}`}>
+    <div className={`toast ${type}`}>
       {message}
+      <button className="toast-close" onClick={onClose}>×</button>
     </div>
   );
 }

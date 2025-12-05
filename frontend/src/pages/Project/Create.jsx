@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createProject } from "../../services/ProjectAPI";
+import Toast from "../../components/Toast";
 import "../../styles/personnel.css";
 
 export default function CreateProject() {
@@ -14,37 +15,45 @@ export default function CreateProject() {
     status: "",
   });
 
-  const [error, setError] = useState("");
+  const [toast, setToast] = useState(null);
 
-  // Handle input
+  // Handle input change
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  // Submit
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
 
     // Basic validation
     if (!form.name || !form.start_date || !form.end_date || !form.status) {
-      setError("Project Name, Dates, and Status are required.");
+      setToast({ message: "Project Name, Dates, and Status are required!", type: "error" });
       return;
     }
 
     try {
       await createProject(form);
-      navigate("/projects");
+      setToast({ message: "Project created successfully!", type: "success" });
+      
+      setTimeout(() => navigate("/projects"), 1000);
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || "Server error. Please try again.");
+      setToast({ message: err.response?.data?.message || "Server error. Please try again.", type: "error" });
     }
   };
 
   return (
     <div className="personnel-container">
-      <h2 className="personnel-title">Add Project</h2>
+      {/* Toast */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
 
-      {error && <p className="error-msg">{error}</p>}
+      <h2 className="personnel-title">Add Project</h2>
 
       <form onSubmit={handleSubmit} className="personnel-form">
         <div className="form-group">

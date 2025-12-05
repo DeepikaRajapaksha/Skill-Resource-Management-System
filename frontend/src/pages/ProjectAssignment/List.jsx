@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllProjectAssignments, deleteProjectAssignment } from "../../services/ProjectAssignmentAPI";
-import "../../styles/personnel.css"; // Use same styling
+import Toast from "../../components/Toast";
+import "../../styles/personnel.css";
 
 export default function List() {
   const [assignments, setAssignments] = useState([]);
+  const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
   const fetchAssignments = async () => {
@@ -13,7 +15,7 @@ export default function List() {
       setAssignments(res.data);
     } catch (err) {
       console.error(err);
-      alert("Failed to fetch assignments");
+      setToast({ message: "Failed to fetch assignments.", type: "error" });
     }
   };
 
@@ -22,22 +24,34 @@ export default function List() {
   }, []);
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this assignment?")) {
-      try {
-        await deleteProjectAssignment(id);
-        fetchAssignments();
-      } catch (err) {
-        console.error(err);
-        alert("Failed to delete assignment");
-      }
+    if (!window.confirm("Are you sure you want to delete this assignment?")) return;
+
+    try {
+      await deleteProjectAssignment(id);
+      setToast({ message: "Assignment deleted successfully.", type: "success" });
+      fetchAssignments();
+    } catch (err) {
+      console.error(err);
+      setToast({ message: "Failed to delete assignment.", type: "error" });
     }
   };
 
   return (
     <div className="personnel-container">
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       <div className="personnel-header">
         <h2 className="personnel-title">Project Assignments</h2>
-        <button onClick={() => navigate("/project-assignment/create")} className="btn-primary">
+        <button
+          onClick={() => navigate("/project-assignment/create")}
+          className="btn-primary"
+        >
           + Add Assignment
         </button>
       </div>
@@ -62,8 +76,18 @@ export default function List() {
                   <td>{a.role_in_project || "-"}</td>
                   <td>{new Date(a.assigned_at).toLocaleDateString()}</td>
                   <td className="personnel-actions">
-                    <button className="btn-edit" onClick={() => navigate(`/project-assignment/edit/${a.id}`)}>Edit</button>
-                    <button className="btn-delete" onClick={() => handleDelete(a.id)}>Delete</button>
+                    <button
+                      className="btn-edit"
+                      onClick={() => navigate(`/project-assignment/edit/${a.id}`)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn-delete"
+                      onClick={() => handleDelete(a.id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))

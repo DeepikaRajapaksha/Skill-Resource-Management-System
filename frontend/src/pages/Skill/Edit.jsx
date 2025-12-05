@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSkill, updateSkill } from "../../services/SkillAPI";
-import "../../styles/personnel.css";  
+import Toast from "../../components/Toast";
+import "../../styles/personnel.css";
 
 export default function Edit() {
   const { id } = useParams();
@@ -13,8 +14,9 @@ export default function Edit() {
     description: "",
   });
 
-  const [error, setError] = useState("");
+  const [toast, setToast] = useState(null);
 
+  // Fetch skill by ID
   useEffect(() => {
     const fetchSkill = async () => {
       try {
@@ -27,8 +29,8 @@ export default function Edit() {
         });
       } catch (err) {
         console.error(err);
-        alert("Skill not found");
-        navigate("/skills");
+        setToast({ message: "Failed to fetch skill data.", type: "error" });
+        setTimeout(() => navigate("/skills"), 2000);
       }
     };
 
@@ -38,31 +40,45 @@ export default function Edit() {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const update = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    setError("");
 
+    // Validation
     if (!form.name || !form.category) {
-      setError("Skill Name and Category are required.");
+      setToast({
+        message: "Skill Name and Category are required!",
+        type: "error",
+      });
       return;
     }
 
     try {
       await updateSkill(id, form);
-      navigate("/skills");
+      setToast({ message: "Skill updated successfully!", type: "success" });
+
+      setTimeout(() => navigate("/skills"), 1000);
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || "Failed to update skill");
+      setToast({
+        message: err.response?.data?.message || "Failed to update skill",
+        type: "error",
+      });
     }
   };
 
   return (
     <div className="personnel-container">
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       <h2 className="personnel-title">Edit Skill</h2>
 
-      {error && <p className="error-msg">{error}</p>}
-
-      <form onSubmit={update}>
+      <form onSubmit={handleUpdate} className="personnel-form">
         <div className="form-group">
           <label>Skill Name *</label>
           <input

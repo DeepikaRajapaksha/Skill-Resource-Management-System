@@ -6,11 +6,13 @@ import {
 } from "../../services/ProjectSkillAPI";
 import { getAllProjects } from "../../services/ProjectAPI";
 import { getAllSkills } from "../../services/SkillAPI";
+import Toast from "../../components/Toast";
 import "../../styles/personnel.css";
 
 export default function Edit() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [form, setForm] = useState({
     project_id: "",
     skill_id: "",
@@ -18,8 +20,9 @@ export default function Edit() {
   });
   const [projects, setProjects] = useState([]);
   const [skills, setSkills] = useState([]);
-  const [error, setError] = useState("");
+  const [toast, setToast] = useState(null);
 
+  // Fetch dropdowns and current data
   useEffect(() => {
     const fetchDropdowns = async () => {
       try {
@@ -29,7 +32,7 @@ export default function Edit() {
         setSkills(skillRes.data);
       } catch (err) {
         console.error(err);
-        alert("Failed to load projects or skills.");
+        setToast({ message: "Failed to load projects or skills.", type: "error" });
       }
     };
 
@@ -43,8 +46,8 @@ export default function Edit() {
         });
       } catch (err) {
         console.error(err);
-        alert("Failed to fetch project skill data.");
-        navigate("/project-skill");
+        setToast({ message: "Failed to fetch project skill data.", type: "error" });
+        setTimeout(() => navigate("/project-skill"), 2000);
       }
     };
 
@@ -57,29 +60,37 @@ export default function Edit() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    setError("");
 
     if (!form.project_id || !form.skill_id || !form.min_proficiency) {
-      setError("All fields are required.");
+      setToast({ message: "All fields are required.", type: "error" });
       return;
     }
 
     try {
       await updateProjectSkill(id, form);
-      navigate("/project-skill");
+      setToast({ message: "Project Skill updated successfully!", type: "success" });
+
+      setTimeout(() => navigate("/project-skill"), 1000);
     } catch (err) {
       console.error(err);
-      setError(
-        err.response?.data?.message || "Server error. Please try again."
-      );
+      setToast({
+        message: err.response?.data?.message || "Server error. Please try again.",
+        type: "error",
+      });
     }
   };
 
   return (
     <div className="personnel-container">
-      <h2 className="personnel-title">Edit Project Skill</h2>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
 
-      {error && <p className="error-msg">{error}</p>}
+      <h2 className="personnel-title">Edit Project Skill</h2>
 
       <form onSubmit={handleUpdate} className="personnel-form">
         <div className="form-group">

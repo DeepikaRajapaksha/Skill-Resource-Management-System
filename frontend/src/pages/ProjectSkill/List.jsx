@@ -4,10 +4,12 @@ import {
   getAllProjectSkills,
   deleteProjectSkill,
 } from "../../services/ProjectSkillAPI";
-import "../../styles/personnel.css"; // reuse existing CSS
+import Toast from "../../components/Toast";
+import "../../styles/personnel.css";
 
 export default function List() {
   const [skills, setSkills] = useState([]);
+  const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
   const fetchSkills = async () => {
@@ -16,7 +18,7 @@ export default function List() {
       setSkills(res.data);
     } catch (err) {
       console.error(err);
-      alert("Failed to fetch project skills.");
+      setToast({ message: "Failed to fetch project skills.", type: "error" });
     }
   };
 
@@ -25,19 +27,28 @@ export default function List() {
   }, []);
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this skill?")) {
-      try {
-        await deleteProjectSkill(id);
-        fetchSkills();
-      } catch (err) {
-        console.error(err);
-        alert("Failed to delete project skill.");
-      }
+    if (!window.confirm("Are you sure you want to delete this skill?")) return;
+
+    try {
+      await deleteProjectSkill(id);
+      setToast({ message: "Project skill deleted successfully!", type: "success" });
+      fetchSkills();
+    } catch (err) {
+      console.error(err);
+      setToast({ message: "Failed to delete project skill.", type: "error" });
     }
   };
 
   return (
     <div className="personnel-container">
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       <div className="personnel-header">
         <h2 className="personnel-title">Project Skills</h2>
         <button

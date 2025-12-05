@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllAssignments, deleteAssignment } from "../../services/AssignmentAPI";
+import Toast from "../../components/Toast";
 import "../../styles/personnel.css";
 
 export default function List() {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
   const fetchAssignments = async () => {
@@ -15,7 +17,7 @@ export default function List() {
       setAssignments(res.data);
     } catch (err) {
       console.error(err);
-      alert("Failed to fetch assignments.");
+      setToast({ message: "Failed to fetch assignments.", type: "error" });
     } finally {
       setLoading(false);
     }
@@ -30,15 +32,25 @@ export default function List() {
 
     try {
       await deleteAssignment(id);
+      setToast({ message: "Assignment deleted successfully!", type: "success" });
       fetchAssignments();
     } catch (err) {
       console.error(err);
-      alert("Failed to delete assignment.");
+      setToast({ message: "Failed to delete assignment.", type: "error" });
     }
   };
 
   return (
     <div className="personnel-container">
+      {/* Toast */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       <div className="personnel-header">
         <h2 className="personnel-title">Personnel Skill Assignments</h2>
         <button
@@ -72,9 +84,7 @@ export default function List() {
                     <td className="personnel-actions">
                       <button
                         className="btn-edit"
-                        onClick={() =>
-                          navigate(`/personnel-skills/edit/${a.id}`)
-                        }
+                        onClick={() => navigate(`/personnel-skills/edit/${a.id}`)}
                       >
                         Edit
                       </button>
@@ -89,11 +99,7 @@ export default function List() {
                 ))
               ) : (
                 <tr>
-                  <td
-                    colSpan="4"
-                    className="text-center"
-                    style={{ color: "#888", padding: "15px" }}
-                  >
+                  <td colSpan="4" className="text-center" style={{ color: "#888", padding: "15px" }}>
                     No assignments found.
                   </td>
                 </tr>

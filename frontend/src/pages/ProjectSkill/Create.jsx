@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   createProjectSkill,
-  getAllProjectSkills,
 } from "../../services/ProjectSkillAPI";
 import { getAllProjects } from "../../services/ProjectAPI";
 import { getAllSkills } from "../../services/SkillAPI";
+import Toast from "../../components/Toast";
 import "../../styles/personnel.css";
 
 export default function Create() {
@@ -17,7 +17,7 @@ export default function Create() {
   });
   const [projects, setProjects] = useState([]);
   const [skills, setSkills] = useState([]);
-  const [error, setError] = useState("");
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     const fetchDropdowns = async () => {
@@ -28,7 +28,7 @@ export default function Create() {
         setSkills(skillRes.data);
       } catch (err) {
         console.error(err);
-        alert("Failed to load projects or skills.");
+        setToast({ message: "Failed to load projects or skills.", type: "error" });
       }
     };
     fetchDropdowns();
@@ -39,29 +39,37 @@ export default function Create() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
 
     if (!form.project_id || !form.skill_id || !form.min_proficiency) {
-      setError("All fields are required.");
+      setToast({ message: "All fields are required.", type: "error" });
       return;
     }
 
     try {
       await createProjectSkill(form);
-      navigate("/project-skill");
+      setToast({ message: "Project Skill added successfully!", type: "success" });
+
+      setTimeout(() => navigate("/project-skill"), 1000);
     } catch (err) {
       console.error(err);
-      setError(
-        err.response?.data?.message || "Server error. Please try again."
-      );
+      setToast({
+        message: err.response?.data?.message || "Server error. Please try again.",
+        type: "error",
+      });
     }
   };
 
   return (
     <div className="personnel-container">
-      <h2 className="personnel-title">Add Project Skill</h2>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
 
-      {error && <p className="error-msg">{error}</p>}
+      <h2 className="personnel-title">Add Project Skill</h2>
 
       <form onSubmit={handleSubmit} className="personnel-form">
         <div className="form-group">

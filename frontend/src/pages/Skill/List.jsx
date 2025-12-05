@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllSkills, deleteSkill } from "../../services/SkillAPI";
+import Toast from "../../components/Toast";
 import "../../styles/skill.css";
 
 export default function SkillList() {
   const [skills, setSkills] = useState([]);
+  const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch skills
+  // Fetch all skills
   const fetchSkills = async () => {
     try {
       const res = await getAllSkills();
       setSkills(res.data);
     } catch (err) {
       console.error("Failed to fetch skills:", err);
-      alert("Failed to fetch skills");
+      setToast({ message: "Failed to fetch skills!", type: "error" });
     }
   };
 
@@ -24,18 +26,31 @@ export default function SkillList() {
 
   // Delete skill
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this skill?")) {
-      try {
-        await deleteSkill(id);
-        fetchSkills();
-      } catch (err) {
-        console.error("Delete failed:", err);
-      }
+    if (!window.confirm("Are you sure you want to delete this skill?")) return;
+
+    try {
+      await deleteSkill(id);
+      setToast({ message: "Skill deleted successfully!", type: "success" });
+      fetchSkills();
+    } catch (err) {
+      console.error("Delete failed:", err);
+      setToast({
+        message: err.response?.data?.message || "Failed to delete skill!",
+        type: "error",
+      });
     }
   };
 
   return (
-    <div className="personnel-container"> {/* SAME STYLING */}
+    <div className="personnel-container">
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       <div className="personnel-header">
         <h2 className="personnel-title">Skill Catalog</h2>
         <button
@@ -47,7 +62,7 @@ export default function SkillList() {
       </div>
 
       <div className="personnel-table-wrapper">
-        <table className="personnel-table"> {/* SAME TABLE STYLE */}
+        <table className="personnel-table">
           <thead>
             <tr>
               <th>Skill Name</th>
@@ -83,7 +98,10 @@ export default function SkillList() {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="text-center py-4 text-gray-500">
+                <td
+                  colSpan="4"
+                  className="text-center py-4 text-gray-500"
+                >
                   No skills found.
                 </td>
               </tr>

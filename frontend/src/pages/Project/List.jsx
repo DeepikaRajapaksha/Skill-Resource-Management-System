@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllProjects, deleteProject } from "../../services/ProjectAPI";
-import "../../styles/personnel.css"; // reuse same styling
+import Toast from "../../components/Toast";
+import "../../styles/personnel.css"; 
 
 export default function ProjectList() {
   const [projects, setProjects] = useState([]);
+  const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
   // Fetch all projects
@@ -14,7 +16,7 @@ export default function ProjectList() {
       setProjects(res.data);
     } catch (err) {
       console.error("Failed to fetch projects:", err);
-      alert("Failed to fetch project data. Please try again.");
+      setToast({ message: "Failed to fetch project data.", type: "error" });
     }
   };
 
@@ -24,19 +26,28 @@ export default function ProjectList() {
 
   // Delete project
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this project?")) {
-      try {
-        await deleteProject(id);
-        fetchProjects();
-      } catch (err) {
-        console.error("Failed to delete project:", err);
-        alert("Failed to delete project. Please try again.");
-      }
+    if (!window.confirm("Are you sure you want to delete this project?")) return;
+
+    try {
+      await deleteProject(id);
+      setToast({ message: "Project deleted successfully!", type: "success" });
+      fetchProjects();
+    } catch (err) {
+      console.error("Failed to delete project:", err);
+      setToast({ message: "Failed to delete project. Please try again.", type: "error" });
     }
   };
 
   return (
     <div className="personnel-container">
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       {/* Header */}
       <div className="personnel-header">
         <h2 className="personnel-title">Project Management</h2>
@@ -103,3 +114,4 @@ export default function ProjectList() {
     </div>
   );
 }
+

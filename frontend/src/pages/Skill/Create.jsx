@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createSkill } from "../../services/SkillAPI";
-import "../../styles/skill.css"; // same style file as personnel
+import Toast from "../../components/Toast"; 
+import "../../styles/skill.css";
 
 export default function CreateSkill() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function CreateSkill() {
   });
 
   const [error, setError] = useState("");
+  const [toast, setToast] = useState({ message: "", type: "" });
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -20,22 +22,43 @@ export default function CreateSkill() {
   const save = async (e) => {
     e.preventDefault();
 
-    if (!form.name || !form.category) {
-      setError("Skill Name and Category are required.");
+    setError("");
+
+    if (!form.name.trim() || !form.category.trim()) {
+      setToast({ message: "Please fill all required fields!", type: "error" });
       return;
     }
 
     try {
       await createSkill(form);
-      navigate("/skills");
+
+      // success toast
+      setToast({ message: "Skill created successfully!", type: "success" });
+
+      setTimeout(() => {
+        navigate("/skills");
+      }, 1200);
+
     } catch (err) {
       console.error(err);
       setError("Failed to create skill");
+
+      // error toast
+      setToast({ message: "Failed to create skill!", type: "error" });
     }
   };
 
   return (
-    <div className="personnel-container"> {/* same container style */}
+    <div className="personnel-container">
+      {/* show toast */}
+      {toast.message && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ message: "", type: "" })}
+        />
+      )}
+
       <h2 className="personnel-title">Add New Skill</h2>
 
       {error && <p className="error-msg">{error}</p>}

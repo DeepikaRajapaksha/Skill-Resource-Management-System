@@ -1,120 +1,122 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getAllPersonnel } from "../../services/PersonnelAPI";
-import { getAllSkills } from "../../services/SkillAPI";
-import { getAssignment, updateAssignment } from "../../services/AssignmentAPI";
+import { getSkill, updateSkill } from "../../services/SkillAPI";
+import Toast from "../../components/Toast";
 import "../../styles/personnel.css";
 
 export default function Edit() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [personnelList, setPersonnelList] = useState([]);
-  const [skillsList, setSkillsList] = useState([]);
+
   const [form, setForm] = useState({
-    personnel_id: "",
-    skill_id: "",
-    proficiency: "Beginner",
+    name: "",
+    category: "",
+    description: "",
   });
-  const [error, setError] = useState("");
 
+  const [toast, setToast] = useState(null);
+
+  // Fetch skill by ID
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchSkill = async () => {
       try {
-        const personnel = await getAllPersonnel();
-        const skills = await getAllSkills();
-        setPersonnelList(personnel.data);
-        setSkillsList(skills.data);
-
-        const assignment = await getAssignment(id);
+        const res = await getSkill(id);
         setForm({
-          personnel_id: assignment.data.personnel_id,
-          skill_id: assignment.data.skill_id,
-          proficiency: assignment.data.proficiency,
+          name: res.data.name || "",
+          category: res.data.category || "",
+          description: res.data.description || "",
         });
       } catch (err) {
         console.error(err);
-        alert("Failed to fetch data.");
-        navigate("/personnel-skills");
+        setToast({ message: "Failed to fetch skill data.", type: "error" });
+        setTimeout(() => navigate("/skills"), 2000);
       }
     };
-    fetchData();
+
+    fetchSkill();
   }, [id, navigate]);
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    if (!form.personnel_id || !form.skill_id) {
-      setError("Personnel and Skill must be selected.");
+
+    // Validation
+    if (!form.name || !form.category) {
+      setToast({
+        message: "Skill Name and Category are required!",
+        type: "error",
+      });
       return;
     }
+
     try {
-      await updateAssignment(id, form);
-      alert("Assignment updated!");
-      navigate("/personnel-skills");
+      await updateSkill(id, form);
+      setToast({ message: "Skill updated successfully!", type: "success" });
+
+      setTimeout(() => navigate("/skills"), 1000);
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || "Failed to update assignment.");
+      setToast({
+        message: err.response?.data?.message || "Failed to update skill",
+        type: "error",
+      });
     }
   };
 
   return (
     <div className="personnel-container">
-      <h2 className="personnel-title">Edit Skill Assignment</h2>
-      {error && <p className="error-msg">{error}</p>}
+      {/* Toast message */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
 
-      <form onSubmit={handleSubmit}>
+      <h2 className="personnel-title">Edit Skill</h2>
+
+      <form onSubmit={handleUpdate} className="personnel-form">
         <div className="form-group">
-          <label>Personnel *</label>
-          <select
-            name="personnel_id"
+          <label>Skill Name *</label>
+          <input
+            type="text"
+            name="name"
             className="form-input"
-            value={form.personnel_id}
+            value={form.name}
             onChange={handleChange}
-          >
-            <option value="">Select Personnel</option>
-            {personnelList.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name} ({p.email})
-              </option>
-            ))}
-          </select>
+            placeholder="React, PHP, UI/UX..."
+          />
         </div>
 
         <div className="form-group">
-          <label>Skill *</label>
-          <select
-            name="skill_id"
+          <label>Category *</label>
+          <input
+            type="text"
+            name="category"
             className="form-input"
-            value={form.skill_id}
+            value={form.category}
             onChange={handleChange}
-          >
-            <option value="">Select Skill</option>
-            {skillsList.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name} ({s.category})
-              </option>
-            ))}
-          </select>
+            placeholder="Framework, Language, Tool..."
+          />
         </div>
 
         <div className="form-group">
-          <label>Proficiency *</label>
-          <select
-            name="proficiency"
-            className="form-input"
-            value={form.proficiency}
+          <label>Description (optional)</label>
+          <textarea
+            name="description"
+            className="form-textarea"
+            rows="4"
+            value={form.description}
             onChange={handleChange}
-          >
-            <option>Beginner</option>
-            <option>Intermediate</option>
-            <option>Advanced</option>
-            <option>Expert</option>
-          </select>
+            placeholder="Short description"
+          />
         </div>
 
-        <button className="btn-submit" type="submit">
-          Update Assignment
+        <button type="submit" className="btn-submit">
+          Update Skill
         </button>
       </form>
     </div>

@@ -1,24 +1,30 @@
-/* src/styles/toast.css */
-
 .toast {
   position: fixed;
   top: 20px;
   right: 20px;
-  min-width: 250px;
   padding: 12px 20px;
+  border-radius: 6px;
   color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  z-index: 9999;
-  opacity: 0.95;
   font-weight: 500;
-  transition: transform 0.3s, opacity 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 9999;
 }
 
-.toast-success {
-  background-color: #4caf50;
+.toast.success {
+  background: linear-gradient(90deg, #4caf50, #81c784);
 }
 
-.toast-error {
-  background-color: #ff4d4f;
+.toast.error {
+  background: linear-gradient(90deg, #f44336, #e57373);
+}
+
+.toast-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
 }

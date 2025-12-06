@@ -15,6 +15,7 @@ export default function Create() {
   });
   const [projects, setProjects] = useState([]);
   const [personnel, setPersonnel] = useState([]);
+  const [selectedProjectDetails, setSelectedProjectDetails] = useState(null);
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
@@ -32,7 +33,14 @@ export default function Create() {
     fetchData();
   }, []);
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+    if (e.target.name === "project_id") {
+      const project = projects.find((p) => p.id.toString() === e.target.value);
+      setSelectedProjectDetails(project || null);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,7 +70,7 @@ export default function Create() {
         />
       )}
 
-      <h2 className="personnel-title">Assign Personnel to Project</h2>
+      <h2 className="personnel-title">Assign Developer to Project</h2>
 
       <form onSubmit={handleSubmit} className="personnel-form">
         <div className="form-group">
@@ -81,6 +89,13 @@ export default function Create() {
             ))}
           </select>
         </div>
+
+        {selectedProjectDetails && (
+          <div className="project-details">
+            <p><strong>Description: </strong> {selectedProjectDetails.description || "N/A"}</p>
+            <p><strong>Status: </strong> {selectedProjectDetails.status}</p>
+          </div>
+        )}
 
         <div className="form-group">
           <label>Personnel *</label>
@@ -118,4 +133,3 @@ export default function Create() {
     </div>
   );
 }
-

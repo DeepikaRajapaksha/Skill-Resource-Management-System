@@ -59,7 +59,7 @@ export default function List() {
           onClick={() => navigate("/project-assignment/create")}
           className="btn-primary"
         >
-          + Add Assignment
+          + Assign Project
         </button>
       </div>
 

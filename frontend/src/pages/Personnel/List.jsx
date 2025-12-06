@@ -57,12 +57,12 @@ export default function List() {
 
       {/* Header */}
       <div className="personnel-header">
-        <h2 className="personnel-title">Personnel Management</h2>
+        <h2 className="personnel-title">Developer Management</h2>
         <button
           onClick={() => navigate("/personnel/create")}
           className="btn-primary"
         >
-          + Add Personnel
+          + Add Developer
         </button>
       </div>
 

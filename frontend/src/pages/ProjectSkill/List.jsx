@@ -6,6 +6,8 @@ import {
 } from "../../services/ProjectSkillAPI";
 import Toast from "../../components/Toast";
 import "../../styles/personnel.css";
+import { confirmDelete } from "../../components/confirmDelete";
+import Swal from "sweetalert2";
 
 export default function List() {
   const [skills, setSkills] = useState([]);
@@ -27,15 +29,20 @@ export default function List() {
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this skill?")) return;
+    const result = await confirmDelete({
+      title: "Delete Project Skill?",
+      text: "This project skill will be permanently deleted.",
+    });
 
-    try {
-      await deleteProjectSkill(id);
-      setToast({ message: "Project skill deleted successfully!", type: "success" });
-      fetchSkills();
-    } catch (err) {
-      console.error(err);
-      setToast({ message: "Failed to delete project skill.", type: "error" });
+    if (result.isConfirmed) {
+      try {
+        await deleteProjectSkill(id);
+        Swal.fire("Deleted!", "The project skill has been deleted.", "success");
+        fetchSkills();
+      } catch (err) {
+        console.error(err);
+        Swal.fire("Error", "Failed to delete the project skill.", "error");
+      }
     }
   };
 

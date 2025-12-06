@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { getAllAssignments, deleteAssignment } from "../../services/AssignmentAPI";
 import Toast from "../../components/Toast";
 import "../../styles/personnel.css";
+import { confirmDelete } from "../../components/confirmDelete";
+import Swal from "sweetalert2";
 
 export default function List() {
   const [assignments, setAssignments] = useState([]);
@@ -28,15 +30,19 @@ export default function List() {
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this assignment?")) return;
+    const result = await confirmDelete({
+      title: "Delete Assignment?",
+      text: "This assignment will be permanently deleted.",
+    });
 
-    try {
-      await deleteAssignment(id);
-      setToast({ message: "Assignment deleted successfully!", type: "success" });
-      fetchAssignments();
-    } catch (err) {
-      console.error(err);
-      setToast({ message: "Failed to delete assignment.", type: "error" });
+    if (result.isConfirmed) {
+      try {
+        await deleteAssignment(id);
+        Swal.fire("Deleted!", "The assignment has been deleted.", "success");
+        fetchAssignments();
+      } catch (error) {
+        Swal.fire("Error", "Failed to delete the assignment.", "error");
+      }
     }
   };
 

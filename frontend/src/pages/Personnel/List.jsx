@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { getAllPersonnel, deletePersonnel } from "../../services/PersonnelAPI";
 import Toast from "../../components/Toast"; 
 import "../../styles/personnel.css";
+import { confirmDelete } from "../../components/confirmDelete";
+import Swal from "sweetalert2";
 
 export default function List() {
   const [personnel, setPersonnel] = useState([]);
@@ -26,14 +28,18 @@ export default function List() {
 
   // Delete personnel
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this personnel?")) {
+    const result = await confirmDelete({
+      title: "Delete Developer?",
+      text: "This developer record will be permanently deleted.",
+    });
+
+    if (result.isConfirmed) {
       try {
         await deletePersonnel(id);
-        setToast({ message: "Personnel deleted successfully!", type: "success" });
-        fetchPersonnel(); 
-      } catch (err) {
-        console.error("Failed to delete personnel:", err);
-        setToast({ message: "Failed to delete personnel.", type: "error" });
+        Swal.fire("Deleted!", "The developer has been deleted.", "success");
+        fetchPersonnel();
+      } catch (error) {
+        Swal.fire("Error", "Failed to developer the personnel.", "error");
       }
     }
   };

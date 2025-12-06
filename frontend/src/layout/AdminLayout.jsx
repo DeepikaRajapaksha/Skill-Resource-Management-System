@@ -3,6 +3,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
 import MobileNavbar from "../components/MobileNavbar";
 import { FaSignOutAlt } from "react-icons/fa";
+import Swal from "sweetalert2";
+
 import "../styles/adminLayout.css";
 
 export default function AdminLayout() {
@@ -19,15 +21,28 @@ export default function AdminLayout() {
     year: "numeric",
   });
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/");
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "Logout?",
+      text: "Are you sure you want to logout?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, logout",
+      cancelButtonText: "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
+      Swal.fire("Logged Out!", "You have been logged out.", "success");
+
+      navigate("/");
+    }
   };
 
   return (
     <div className="admin-container">
-
       {/* MOBILE NAVBAR */}
       <MobileNavbar toggleSidebar={() => setMobileSidebar(!mobileSidebar)} />
 
@@ -36,9 +51,7 @@ export default function AdminLayout() {
         className={`admin-sidebar ${mobileSidebar ? "sidebar-mobile-open" : ""}`}
         style={{ width: sidebarOpen ? "240px" : "70px" }}
       >
-        <h2 className="sidebar-title">
-          {sidebarOpen ? "SRMS Admin" : "SR"}
-        </h2>
+        <h2 className="sidebar-title">{sidebarOpen ? "SRMS Admin" : "SR"}</h2>
 
         <AdminSidebar sidebarOpen={sidebarOpen} />
 

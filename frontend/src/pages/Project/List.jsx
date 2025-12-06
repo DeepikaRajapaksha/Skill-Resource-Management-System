@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { getAllProjects, deleteProject } from "../../services/ProjectAPI";
 import Toast from "../../components/Toast";
 import "../../styles/personnel.css"; 
+import { confirmDelete } from "../../components/confirmDelete";
+import Swal from "sweetalert2";
 
 export default function ProjectList() {
   const [projects, setProjects] = useState([]);
@@ -26,17 +28,23 @@ export default function ProjectList() {
 
   // Delete project
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this project?")) return;
+    const result = await confirmDelete({
+      title: "Delete Project?",
+      text: "This project will be permanently deleted.",
+    });
 
-    try {
-      await deleteProject(id);
-      setToast({ message: "Project deleted successfully!", type: "success" });
-      fetchProjects();
-    } catch (err) {
-      console.error("Failed to delete project:", err);
-      setToast({ message: "Failed to delete project. Please try again.", type: "error" });
+    if (result.isConfirmed) {
+      try {
+        await deleteProject(id);
+        Swal.fire("Deleted!", "The project has been deleted.", "success");
+        fetchProjects();
+      } catch (err) {
+        console.error("Failed to delete project:", err);
+        Swal.fire("Error", "Failed to delete the project. Please try again.", "error");
+      }
     }
   };
+
 
   return (
     <div className="personnel-container">

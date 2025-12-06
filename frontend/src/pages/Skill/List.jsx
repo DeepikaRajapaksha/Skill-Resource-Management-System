@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { getAllSkills, deleteSkill } from "../../services/SkillAPI";
 import Toast from "../../components/Toast";
 import "../../styles/skill.css";
+import { confirmDelete } from "../../components/confirmDelete";
+import Swal from "sweetalert2";
 
 export default function SkillList() {
   const [skills, setSkills] = useState([]);
@@ -26,18 +28,24 @@ export default function SkillList() {
 
   // Delete skill
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this skill?")) return;
+    const result = await confirmDelete({
+      title: "Delete Skill?",
+      text: "This skill will be permanently deleted.",
+    });
 
-    try {
-      await deleteSkill(id);
-      setToast({ message: "Skill deleted successfully!", type: "success" });
-      fetchSkills();
-    } catch (err) {
-      console.error("Delete failed:", err);
-      setToast({
-        message: err.response?.data?.message || "Failed to delete skill!",
-        type: "error",
-      });
+    if (result.isConfirmed) {
+      try {
+        await deleteSkill(id);
+        Swal.fire("Deleted!", "The skill has been deleted.", "success");
+        fetchSkills();
+      } catch (err) {
+        console.error("Delete failed:", err);
+        Swal.fire(
+          "Error",
+          err.response?.data?.message || "Failed to delete skill!",
+          "error"
+        );
+      }
     }
   };
 

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
+import MobileNavbar from "../components/MobileNavbar";
 import { FaSignOutAlt } from "react-icons/fa";
 import "../styles/adminLayout.css";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileSidebar, setMobileSidebar] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user")) || { email: "Admin" };
 
@@ -25,13 +27,19 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-container">
-      {/* Sidebar */}
-      <aside className="admin-sidebar" style={{ width: sidebarOpen ? "240px" : "70px" }}>
-        <h2 style={{ fontSize: sidebarOpen ? "1.4rem" : "0.9rem" }}>
+
+      {/* MOBILE NAVBAR */}
+      <MobileNavbar toggleSidebar={() => setMobileSidebar(!mobileSidebar)} />
+
+      {/* SIDEBAR */}
+      <aside
+        className={`admin-sidebar ${mobileSidebar ? "sidebar-mobile-open" : ""}`}
+        style={{ width: sidebarOpen ? "240px" : "70px" }}
+      >
+        <h2 className="sidebar-title">
           {sidebarOpen ? "SRMS Admin" : "SR"}
         </h2>
 
-        {/* Admin Sidebar Navigation */}
         <AdminSidebar sidebarOpen={sidebarOpen} />
 
         <button className="logout-btn" onClick={handleLogout}>
@@ -39,13 +47,11 @@ export default function AdminLayout() {
         </button>
       </aside>
 
-      {/* Main Content */}
+      {/* MAIN CONTENT */}
       <div className="admin-main">
         <header className="admin-header">
-          <h2 style={{ margin: 0, color: "#666" }}>
-            Hello, {user.email.split("@")[0]} 👋
-          </h2>
-          <div style={{ color: "#666", fontWeight: "500" }}>{today}</div>
+          <h2>Hello, {user.email.split("@")[0]} 👋</h2>
+          <span>{today}</span>
         </header>
 
         <main className="admin-content">
@@ -55,4 +61,3 @@ export default function AdminLayout() {
     </div>
   );
 }
-

@@ -42,6 +42,20 @@ git clone https://github.com/DeepikaRajapaksha/Skill-Resource-Management-System.
 
 ## 🗄 3. Create MySQL Database
 
+Before creating the database, make sure your MySQL server is running.
+
+▶ If you are using XAMPP
+
+Start MySQL Module.
+
+▶ If you are using WAMP
+
+Start all services → ensure MySQL is running.
+
+▶ If you are using MySQL Workbench / standalone MySQL
+
+Make sure the MySQL Server Status = Running.
+
 - Open MySQL and run:
 - CREATE DATABASE skills_management;
 
@@ -89,6 +103,15 @@ Open a new terminal window:
 
 Frontend will run on:
 👉 **[http://localhost:5173](http://localhost:5173)**
+
+## 🔐 8. Login Credentials (Seeder Default)
+
+If you used the provided seeders, the default login credentials are:
+
+Admin Login
+
+- Email: admin@example.com
+- Password: 12345
 
 
 # 📡 API Endpoints Documentation

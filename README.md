@@ -119,7 +119,7 @@ Admin Login
 ## 🔐 Auth API
 
 | Method | Endpoint             | Description             |
-| ------ | -------------------- | ----------------------- |   |
+| ------ | -------------------- | ----------------------- |   
 | POST   | `/api/auth/login`    | Login and get JWT token |
 
 ---

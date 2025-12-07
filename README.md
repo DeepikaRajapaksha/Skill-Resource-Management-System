@@ -34,8 +34,7 @@ Install the following before running the system:
 
 ## 📥 1. Clone the Repository
 
-git clone https://github.com/your-username/skills-resource-management-system.git
-cd skills-resource-management-system
+git clone https://github.com/DeepikaRajapaksha/Skill-Resource-Management-System.git
 
 ## ⚙️ 2. Backend Setup
 - cd backend
@@ -167,45 +166,3 @@ Frontend will run on:
 * REST API using Express.js
 * Fully working React frontend
 * Login / Authentication using JWT
-
----
-
-## 🖼 Screenshots
-
-Create a folder:
-
-```
-/screenshots
-```
-
-Then add:
-
-```md
-![Dashboard](./screenshots/dashboard.png)
-![Assignments](./screenshots/assignments.png)
-![Skill Matching](./screenshots/matching.png)
-```
-
----
-
-## 📌 Notes
-
-* Always keep backend and frontend running in **separate terminals**
-* Use MySQL Workbench or phpMyAdmin to check tables
-
----
-
-## 🎯 Completed & Ready to Deploy
-
-Your README is complete and suitable for GitHub, portfolio submission, internship applications, and documentation.
-
----
-
-If you want, I can also generate:
-
-✅ `schema.sql` file
-✅ `seeders.sql`
-✅ Folder structure diagram
-✅ API testing examples for Postman
-
-Just tell me!

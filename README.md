@@ -57,7 +57,7 @@ Start all services → ensure MySQL is running.
 Make sure the MySQL Server Status = Running.
 
 - Open MySQL and run:
-- CREATE DATABASE skills_management;
+- CREATE DATABASE skills_resource_mgmt;
 
 ## 📦 4. Run Migrations & Seeders
 
@@ -81,7 +81,7 @@ Create `.env` inside **backend/**:
 - DB_HOST=localhost
 - DB_USER=root
 - DB_PASSWORD=
-- DB_NAME=skills_management
+- DB_NAME=skills_resource_mgmt
 
 - JWT_SECRET=your_jwt_secret_key
 - PORT=5000

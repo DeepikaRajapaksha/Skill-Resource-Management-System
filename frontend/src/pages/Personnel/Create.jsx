@@ -45,7 +45,7 @@ export default function Create() {
         />
       )}
 
-      <h2 className="personnel-title">Add Personnel</h2>
+      <h2 className="personnel-title">Add Developer</h2>
 
       <form onSubmit={handleSubmit} className="personnel-form">
         {/* form fields */}
